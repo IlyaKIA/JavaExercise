@@ -42,6 +42,7 @@ public class Window extends JFrame {
         JMenu menuFile = new JMenu("File");
         JMenu menuConnection = new JMenu("Connection");
         JMenuItem menuConnect = new JMenuItem("Connect");
+        JMenuItem menuGetIn = new JMenuItem("Get in");
         JMenuItem menuDisconnect = new JMenuItem("Disconnect");
         JMenuItem menuAbout = new JMenuItem("About");
         JMenuItem menuSettings = new JMenuItem("Settings");
@@ -51,6 +52,7 @@ public class Window extends JFrame {
         menuFile.add(menuExit);
         menuBar.add(menuFile);
         menuConnection.add(menuConnect);
+        menuConnection.add(menuGetIn);
         menuConnection.add(menuDisconnect);
         menuBar.add(menuConnection);
         setJMenuBar(menuBar);
@@ -70,31 +72,45 @@ public class Window extends JFrame {
         menuConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(),settings.getNickTextField(), settings.getLoginTextField(), settings.getPasswordField());
+                try {
+                    conServ.connect();
+                    historyText.append("Connection success\n");
+                } catch (IOException ioException) {
+                    historyText.append("Connection failed\n");
+                }
+            }
+        });
+
+        //Аутентификация
+        menuGetIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 if (settings.getNickTextField().equals("") || settings.getLoginTextField().equals("") ||
                         settings.getPasswordField().equals("")) {
                     historyText.append("Login, Password and Nick must to be filled");
                     return;
                 }
-                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(),settings.getNickTextField(), settings.getLoginTextField(), settings.getPasswordField());
                 try {
-                    conServ.connect();
                     conServ.authentication();
                     insertMSG();
-
+                    historyText.append("Authentication success\n");
                 } catch (IOException ioException) {
-                    historyText.append("Connection failed" + "\n");
+                    historyText.append("Authentication failed\n");
                 }
             }
         });
+
+
 
         menuDisconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     conServ.disconnection();
-                    historyText.append("Disconnected" + "\n");
+                    historyText.append("Disconnected\n");
                 } catch (IOException ioException) {
-                    historyText.append("Disconnection failed" + "\n");
+                    historyText.append("Disconnection failed\n");
                 }
             }
         });
@@ -182,14 +198,14 @@ public class Window extends JFrame {
             try {
                 conServ.setOutPrivetMSG(userList.getSelectedValue(), textInput.getText());
             } catch (IOException e) {
-                historyText.append("Sending error" + "\n");
+                historyText.append("Sending error\n");
             }
             textInput.setText("");
         } else {
             try {
                 conServ.setOutMSG(textInput.getText());
             } catch (IOException e) {
-                historyText.append("Sending error" + "\n");
+                historyText.append("Sending error\n");
             }
             textInput.setText("");
         }
