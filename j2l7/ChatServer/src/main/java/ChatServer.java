@@ -39,6 +39,10 @@ public class ChatServer {
             }
         } catch (IOException e) {
             System.out.println("Error. Port is closed.");
+        } finally {
+            if (authService != null) {
+                authService.stop();
+            }
         }
     }
 
@@ -94,5 +98,9 @@ public class ChatServer {
                 c.sendMessage(dto);
             }
         }
+    }
+
+    public void changeNick(MessageDTO dto) {
+            authService.changeNickInDB(dto.getFrom(), dto.getBody());
     }
 }

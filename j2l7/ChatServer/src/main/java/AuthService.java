@@ -1,5 +1,7 @@
 public interface AuthService {
     void start();
-    boolean isAuthCorrect(String login, String password);
+    String isAuthCorrect(String login, String password);
     void stop();
+
+    void changeNickInDB(String from, String body);
 }

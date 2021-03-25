@@ -55,6 +55,9 @@ public class ConnectionService {
 //
                 case AUTH_CONFIRM -> {
                     inMSG = "New user added\n";
+                    Main.getWindow().setTitle(dto.getFrom());
+                    Main.getWindow().getMenuChangeNick().setEnabled(true);
+
                 }
 //
 //                case ERROR_MESSAGE -> showError(dto);
@@ -64,7 +67,7 @@ public class ConnectionService {
         }catch (IOException e){
             inMSG = "Error. Connection is failed.";
         }
-        return "Server is disconnected";
+        return null;
     }
     private String showMessage(MessageDTO dto) {
         String msg = String.format("[%s] [%s] -> %s\n", dto.getMessageType(), dto.getFrom(), dto.getBody());
@@ -102,5 +105,17 @@ public class ConnectionService {
         dto.setTo(nick);
         dto.setBody(msg);
         output.writeUTF(dto.convertToJson());
+    }
+    public void setChangeNick(String oldNick, String newNick) throws IOException {
+        MessageDTO dto = new MessageDTO();
+        dto.setMessageType(MessageType.CHANGE_NICK);
+        dto.setTo(oldNick);
+        dto.setBody(newNick);
+        output.writeUTF(dto.convertToJson());
+        nick = newNick;
+    }
+
+    public String getNick() {
+        return nick;
     }
 }
