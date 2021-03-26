@@ -19,10 +19,9 @@ public class ConnectionService {
     private DefaultListModel<String> usersOnline = new DefaultListModel<>();
 
 
-    public ConnectionService(String address, int port, String nick, String login, String password) {
+    public ConnectionService(String address, int port, String login, String password) {
         this.address = address;
         this.port = port;
-        this.nick = nick;
         this.login = login;
         this.password = password;
     }
@@ -52,12 +51,15 @@ public class ConnectionService {
                     }
                     inMSG = "*Refresh user list";
                 }
-//
                 case AUTH_CONFIRM -> {
                     inMSG = "New user added\n";
-                    Main.getWindow().setTitle(dto.getFrom());
+                    nick = dto.getFrom();
+                    Main.getWindow().setTitle(nick);
                     Main.getWindow().getMenuChangeNick().setEnabled(true);
-
+                }
+                case CHANGE_NICK -> {
+                    Main.getWindow().setTitle(dto.getFrom());
+                    nick = dto.getBody();
                 }
 //
 //                case ERROR_MESSAGE -> showError(dto);
@@ -112,7 +114,6 @@ public class ConnectionService {
         dto.setTo(oldNick);
         dto.setBody(newNick);
         output.writeUTF(dto.convertToJson());
-        nick = newNick;
     }
 
     public String getNick() {

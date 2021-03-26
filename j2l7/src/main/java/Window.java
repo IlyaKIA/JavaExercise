@@ -80,7 +80,7 @@ public class Window extends JFrame {
         menuConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(),settings.getNickTextField(), settings.getLoginTextField(), settings.getPasswordField());
+                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(), settings.getLoginTextField(), settings.getPasswordField());
                 try {
                     conServ.connect();
                     historyText.append("Connection success\n");
@@ -163,6 +163,7 @@ public class Window extends JFrame {
                 System.exit(0);
             }
         });
+        //Вклчение меню смены ника
         menuChangeNick.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

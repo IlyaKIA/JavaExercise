@@ -59,9 +59,12 @@ public class ClientHandler {
                             nickName = dto.getBody();
                             server.broadcastOnlineClients();
                             MessageDTO answer = new MessageDTO();
-                            answer.setMessageType(MessageType.PUBLIC_MESSAGE);
-                            answer.setFrom(dto.getFrom());
+                            answer.setMessageType(MessageType.CHANGE_NICK);
+                            answer.setFrom(nickName);
                             answer.setBody(dto.getFrom() + " change nick to " + dto.getBody());
+                            server.privetMessage(answer);
+                            answer.setFrom(dto.getFrom());
+                            answer.setMessageType(MessageType.PUBLIC_MESSAGE);
                             server.broadcastMessage(answer);
                         } else {
                             MessageDTO answer = new MessageDTO();
@@ -75,7 +78,7 @@ public class ClientHandler {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Client " + nickName + " disconnected" );
         }
     }
 
