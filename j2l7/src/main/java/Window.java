@@ -3,20 +3,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Window extends JFrame {
     private ConnectionService conServ;
     private JTextArea historyText;
-    private Settings settings;
+    private final Settings settings;
     private ChangeNick changeNick;
     public static JList<String> userList;
     private Registration registration;
-    private JMenuItem menuChangeNick;
+    private final JMenuItem menuChangeNick;
+    private History historyToFile;
 
 
     public Window() {
         setTitle("MyChat");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setBounds(300,300,450,600);
 
         historyText = new JTextArea();
@@ -51,8 +54,9 @@ public class Window extends JFrame {
         JMenuItem menuSettings = new JMenuItem("Settings");
         JMenuItem menuExit = new JMenuItem("Exit");
         menuFile.add(menuSettings);
-        menuFile.add(menuAbout);
+        menuConnection.add(menuRegistration);
         menuFile.add(menuChangeNick);
+        menuFile.add(menuAbout);
         menuFile.add(menuExit);
         menuBar.add(menuFile);
         menuConnection.add(menuConnect);
@@ -71,10 +75,20 @@ public class Window extends JFrame {
 
         //Загрузка Настроек
         settings = new Settings();
+        historyToFile = new History();
 
 
 //        profile = new Profile(settings.getLoginTextField(), settings.getPasswordField(), settings.getNickTextField());
 //        profile.setVisible(true);
+
+        //Отслеживание меню регистарции
+        menuRegistration.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Registration registrWin = new Registration();
+                registrWin.setVisible(true);
+            }
+        });
 
         //Соединение
         menuConnect.addActionListener(new ActionListener() {
@@ -109,14 +123,14 @@ public class Window extends JFrame {
             }
         });
 
-
-
         menuDisconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     conServ.disconnection();
-                    historyText.append("Disconnected\n");
+                    historyToFile.writeToFile(conServ.getNick(), historyText.getText());
+                    historyText.setText("Disconnected\n");
+                    userList.setListData(new String[] {""});
                 } catch (IOException ioException) {
                     historyText.append("Disconnection failed\n");
                 }
@@ -240,5 +254,16 @@ public class Window extends JFrame {
 
     public ConnectionService getConServ() {
         return conServ;
+    }
+
+    public void fillHistoryText (){
+        List<String> historyFromFile = new ArrayList<>(historyToFile.readFromFile(conServ.getNick()));
+        for (String s : historyFromFile){
+            historyText.append(s + "\n");
+        }
+    }
+
+    public void saveHistory(String msg) {
+        historyToFile.addToLastSessionHistory(msg);
     }
 }

@@ -4,4 +4,6 @@ public interface AuthService {
     void stop();
 
     void changeNickInDB(String from, String body);
+
+    boolean isAccountFree(String newNick, String accountData);
 }

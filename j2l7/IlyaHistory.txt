@@ -1,0 +1,14 @@
+Disconnected
+Connection success
+Authentication success
+Connection success
+Authentication success
+Disconnected
+New user added
+[PUBLIC_MESSAGE] [Ilya] -> ыфваыв
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> фываывфа
+[PRIVATE_MESSAGE] [Ilya] -> фывавыа
+[PRIVATE_MESSAGE] [Vova] -> фывафывафыв
+Disconnected
+Server is disconnected

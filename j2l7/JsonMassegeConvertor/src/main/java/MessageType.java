@@ -15,5 +15,6 @@ public enum MessageType {
     SEND_AUTH_MESSAGE,
     AUTH_CONFIRM,
     ERROR_MESSAGE,
-    CHANGE_NICK
+    CHANGE_NICK,
+    REGISTRATION
 }

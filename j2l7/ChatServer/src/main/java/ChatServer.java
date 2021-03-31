@@ -43,6 +43,7 @@ public class ChatServer {
             if (authService != null) {
                 authService.stop();
             }
+            closeConnection();
         }
     }
 
@@ -101,6 +102,6 @@ public class ChatServer {
     }
 
     public void changeNick(MessageDTO dto) {
-            authService.changeNickInDB(dto.getFrom(), dto.getBody());
+                authService.changeNickInDB(dto.getFrom(), dto.getBody());
     }
 }
