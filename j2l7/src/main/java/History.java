@@ -37,11 +37,11 @@ public class History {
                 return history.subList((history.size()-100), history.size());
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("File not found");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<String>();
     }
 
     public void addToLastSessionHistory(String msg) {

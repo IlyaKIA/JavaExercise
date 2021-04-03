@@ -121,3 +121,5 @@ Disconnected
 [PRIVATE_MESSAGE] [Vova] -> hngf
 [PUBLIC_MESSAGE] [Petya] -> fds
 [PUBLIC_MESSAGE] [Vova] -> asdf
+[PUBLIC_MESSAGE] [Vova] -> 1
+[PRIVATE_MESSAGE] [Vova] -> 2

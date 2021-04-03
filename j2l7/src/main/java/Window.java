@@ -14,18 +14,17 @@ public class Window extends JFrame {
     public static JList<String> userList;
     private Registration registration;
     private final JMenuItem menuChangeNick;
+    private final JMenuItem menuRegistration;
     private History historyToFile;
-
 
     public Window() {
         setTitle("MyChat");
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(300,300,450,600);
 
         historyText = new JTextArea();
         historyText.setEditable(false);
         JScrollPane scrollText = new JScrollPane(historyText);
-
         //Инициализация поля ввода текста и кнопки
         JTextField textInput = new JTextField();
         userList = new JList<>();
@@ -47,7 +46,7 @@ public class Window extends JFrame {
         JMenuItem menuConnect = new JMenuItem("Connect");
         JMenuItem menuGetIn = new JMenuItem("Get in");
         JMenuItem menuDisconnect = new JMenuItem("Disconnect");
-        JMenuItem menuRegistration = new JMenuItem("Registration");
+        menuRegistration = new JMenuItem("Registration");
         menuChangeNick = new JMenuItem("Change nick");
         menuChangeNick.setEnabled(false);
         JMenuItem menuAbout = new JMenuItem("About");
@@ -94,13 +93,7 @@ public class Window extends JFrame {
         menuConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(), settings.getLoginTextField(), settings.getPasswordField());
-                try {
-                    conServ.connect();
-                    historyText.append("Connection success\n");
-                } catch (IOException ioException) {
-                    historyText.append("Connection failed\n");
-                }
+                connection();
             }
         });
 
@@ -110,15 +103,15 @@ public class Window extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (settings.getNickTextField().equals("") || settings.getLoginTextField().equals("") ||
                         settings.getPasswordField().equals("")) {
-                    historyText.append("Login, Password and Nick must to be filled");
+                    appendHistoryText("Login, Password and Nick must to be filled");
                     return;
                 }
                 try {
                     conServ.authentication();
                     insertMSG();
-                    historyText.append("Authentication success\n");
+                    appendHistoryText("Authentication success\n");
                 } catch (IOException ioException) {
-                    historyText.append("Authentication failed\n");
+                    appendHistoryText("Authentication failed\n");
                 }
             }
         });
@@ -131,8 +124,9 @@ public class Window extends JFrame {
                     historyToFile.writeToFile(conServ.getNick(), historyText.getText());
                     historyText.setText("Disconnected\n");
                     userList.setListData(new String[] {""});
+                    menuRegistration.setEnabled(true);
                 } catch (IOException ioException) {
-                    historyText.append("Disconnection failed\n");
+                    appendHistoryText("Disconnection failed\n");
                 }
             }
         });
@@ -189,12 +183,23 @@ public class Window extends JFrame {
         setVisible(true);
     }
 
+    public void connection() {
+        conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(), settings.getLoginTextField(), settings.getPasswordField());
+        try {
+            conServ.connect();
+            appendHistoryText("Connection success\n");
+        } catch (IOException ioException) {
+            appendHistoryText("Connection failed\n");
+        }
+    }
+
 
     void insertMSG() {
         //Запуск потока чтения
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //TODO Вывод сообщений с ошибками.
                 while (true) {
                     String msg = conServ.getInMSG();
                     if (msg != null) {
@@ -209,10 +214,10 @@ public class Window extends JFrame {
                         if (msg.equals("*Refresh user list")) {
                             userList.setSelectedIndex(0);
                         } else {
-                            historyText.append(msg);
+                            appendHistoryText(msg);
                         }
                     } else {
-                        historyText.append("Server is disconnected");
+                        appendHistoryText("Server is disconnected");
                         break;
                     }
 
@@ -235,17 +240,18 @@ public class Window extends JFrame {
             try {
                 conServ.setOutPrivetMSG(userList.getSelectedValue(), textInput.getText());
             } catch (IOException e) {
-                historyText.append("Sending error\n");
+                appendHistoryText("Sending error\n");
             }
             textInput.setText("");
         } else {
             try {
                 conServ.setOutMSG(textInput.getText());
             } catch (IOException e) {
-                historyText.append("Sending error\n");
+                appendHistoryText("Sending error\n");
             }
             textInput.setText("");
         }
+        historyText.setCaretPosition(historyText.getDocument().getLength());
     }
 
     public JMenuItem getMenuChangeNick() {
@@ -259,11 +265,20 @@ public class Window extends JFrame {
     public void fillHistoryText (){
         List<String> historyFromFile = new ArrayList<>(historyToFile.readFromFile(conServ.getNick()));
         for (String s : historyFromFile){
-            historyText.append(s + "\n");
+            appendHistoryText(s + "\n");
         }
     }
 
     public void saveHistory(String msg) {
         historyToFile.addToLastSessionHistory(msg);
+    }
+
+    private void appendHistoryText (String msg) {
+        historyText.append(msg);
+        historyText.setCaretPosition(historyText.getDocument().getLength());
+    }
+
+    public JMenuItem getMenuRegistration() {
+        return menuRegistration;
     }
 }

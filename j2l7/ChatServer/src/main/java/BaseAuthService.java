@@ -78,12 +78,25 @@ public class BaseAuthService implements AuthService {
         try {
             ResultSet rs = statement.executeQuery("select * from users;");
             while (rs.next()) {
-                if (newNick.equals(rs.getString(accountData))) return false;
+                String s = rs.getString(accountData);
+                if (newNick.equals(s)) return false;
             }
         } catch (SQLException throwables) {
             System.out.println("Read data base error");
         }
         return true;
+    }
+
+    public void addUserToDB(String login, String password, String nick){
+        try {
+            prSt = connection.prepareStatement("insert into users (login, password, nick) values (?, ?, ?);");
+            prSt.setString(1, login);
+            prSt.setString(2, password);
+            prSt.setString(3, nick);
+            prSt.executeUpdate();
+        } catch (SQLException throwables) {
+            System.out.println("Registration new user error");
+        }
     }
 }
 

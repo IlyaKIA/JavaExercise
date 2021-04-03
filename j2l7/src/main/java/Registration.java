@@ -35,6 +35,10 @@ public class Registration extends JFrame {
         add(butOK);
         add(butCancel);
 
+        if (Main.getWindow().getConServ() == null) {
+            Main.getWindow().connection();
+        }
+
         butOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

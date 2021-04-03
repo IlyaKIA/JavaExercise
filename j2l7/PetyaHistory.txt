@@ -9,3 +9,6 @@ New user added
 [PRIVATE_MESSAGE] [Vova] -> фыва
 [PUBLIC_MESSAGE] [Petya] -> fds
 [PUBLIC_MESSAGE] [Vova] -> asdf
+[PUBLIC_MESSAGE] [Vova] -> 1
+[PUBLIC_MESSAGE] [Petya] -> Привет
+[PUBLIC_MESSAGE] [Vova] -> hi

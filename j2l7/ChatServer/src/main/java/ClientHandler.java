@@ -11,6 +11,7 @@ public class ClientHandler {
     private DataInputStream input;
     private DataOutputStream output;
     private String nickName;
+    private boolean isAuth;
 
     public String getNickName() {
         return nickName;
@@ -22,20 +23,21 @@ public class ClientHandler {
             this.server = server;
             this.input = new DataInputStream(socket.getInputStream());
             this.output = new DataOutputStream(socket.getOutputStream());
-            new Thread(() -> {
-                try {
-                    Timer timer = new Timer();
-                    timer.schedule(new timerCloseConnection(), 120_000);
-                    authentication();
-                    readMessages();
-                } catch (IOException e) {
-                    System.out.println("Connection failed" + "\n");
-                    e.printStackTrace();
-                } finally {
-                    closeConnection();
+            server.getExecService().execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Timer timer = new Timer();
+                        timer.schedule(new timerCloseConnection(), 120_000);
+                        authOrRegistr();
+                        readMessages();
+                    } catch (IOException e) {
+                        System.out.println("Connection failed" + "\n");
+                    } finally {
+                        closeConnection();
+                    }
                 }
-            }).start();
-
+            });
         } catch (IOException e) {
             System.out.println("Socket connection error");
         }
@@ -54,7 +56,6 @@ public class ClientHandler {
                     case  PUBLIC_MESSAGE -> server.broadcastMessage(dto);
                     case PRIVATE_MESSAGE -> server.privetMessage(dto);
                     case CHANGE_NICK -> nickChanging(dto);
-                    case REGISTRATION -> addNewUser(dto);
                 }
             }
         } catch (IOException e) {
@@ -62,9 +63,16 @@ public class ClientHandler {
         }
     }
 
-    private void addNewUser(MessageDTO dto) {
-        if (server.getAuthService().isAccountFree(dto.getLogin(), "nick") && server.getAuthService().isAccountFree(dto.getBody(), "login")) {
-            //TODO
+    private void addNewUser(MessageDTO dto) throws IOException {
+        if (server.getAuthService().isAccountFree(dto.getLogin(), "login") && server.getAuthService().isAccountFree(dto.getBody(), "nick")) {
+            server.getAuthService().addUserToDB(dto.getLogin(), dto.getPassword(), dto.getBody());
+            authentication(dto);
+        } else{
+            MessageDTO answer = new MessageDTO();
+            answer.setMessageType(MessageType.ERROR_MESSAGE);
+            answer.setBody("Nick or login already busy!");
+            System.out.println("Nick or login already busy!");
+            sendMessage(answer);
         }
     }
 
@@ -91,33 +99,28 @@ public class ClientHandler {
         }
     }
 
-    private void authentication() throws IOException {
-        while (true) {
-            String auth = input.readUTF();
-            MessageDTO dto = MessageDTO.convertFromJson(auth);
-            nickName = server.getAuthService().isAuthCorrect(dto.getLogin(), dto.getPassword());
-            //nickName = dto.getBody();
-            MessageDTO answer = new MessageDTO();
-            if (nickName == null){
-                answer.setMessageType(MessageType.ERROR_MESSAGE);
-                answer.setBody("Wrong login or pass!");
-                System.out.println("Wrong auth");
-            } else if (server.isUserBusy(nickName)) {
-                answer.setMessageType(MessageType.ERROR_MESSAGE);
-                answer.setBody("U're need to change nick!!!");
-                System.out.println("Clone");
-            } else {
-                answer.setMessageType(MessageType.AUTH_CONFIRM);
-                answer.setFrom(nickName);
-                answer.setBody("Subscribed");
-                server.addOnlineUser(this);
-                System.out.println("Subscribed");
-                sendMessage(answer);
-                break;
-            }
+    private void authentication(MessageDTO dto) {
+        nickName = server.getAuthService().isAuthCorrect(dto.getLogin(), dto.getPassword());
+        MessageDTO answer = new MessageDTO();
+        if (nickName == null){
+            answer.setMessageType(MessageType.ERROR_MESSAGE);
+            answer.setBody("Wrong login or pass!");
+            System.out.println("Wrong auth");
+        } else if (server.isUserBusy(nickName)) {
+            answer.setMessageType(MessageType.ERROR_MESSAGE);
+            answer.setBody("U're need to change nick!!!");
+            System.out.println("Clone");
+        } else {
+            answer.setMessageType(MessageType.AUTH_CONFIRM);
+            answer.setFrom(nickName);
+            answer.setBody("Subscribed");
+            server.addOnlineUser(this);
+            System.out.println("Subscribed");
             sendMessage(answer);
-            }
+            isAuth = true;
         }
+        sendMessage(answer);
+    }
 
     public void sendMessage(MessageDTO dto) {
         try {
@@ -144,6 +147,17 @@ public class ClientHandler {
             if (nickName == null){
                 closeConnection();
                 System.out.println("The client was disconnected by timeout");
+            }
+        }
+    }
+
+    private void authOrRegistr() throws IOException {
+        while (!isAuth) {
+            String auth = input.readUTF();
+            MessageDTO dto = MessageDTO.convertFromJson(auth);
+            switch (dto.getMessageType()) {
+                case SEND_AUTH_MESSAGE -> authentication(dto);
+                case REGISTRATION -> addNewUser(dto);
             }
         }
     }
