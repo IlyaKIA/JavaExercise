@@ -1,4 +1,5 @@
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
@@ -30,9 +31,16 @@ public class Car implements Runnable {
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
-        if (!MainClass.isWinner()){
-            MainClass.setWinner(true);
-            System.out.println(this.name + " WIN!!!");
+        if (!MainClass.isWinner() && !rwl.isWriteLocked()){
+            try {
+                rwl.writeLock().lock();
+                MainClass.setWinner(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                rwl.writeLock().unlock();
+                System.out.println(this.name + " WIN!!!");
+            }
         }
         try {
             MainClass.cyclicBarrier.await();
