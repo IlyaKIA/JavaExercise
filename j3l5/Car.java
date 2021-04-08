@@ -6,6 +6,8 @@ public class Car implements Runnable {
     private Race race;
     private int speed;
     private String name;
+    static ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    
     public String getName() {
         return name;
     }
