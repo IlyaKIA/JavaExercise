@@ -1,0 +1,2 @@
+[PUBLIC_MESSAGE] [Petya] -> Hello
+[PUBLIC_MESSAGE] [Vova] -> Vova change nick to Kolya

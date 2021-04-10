@@ -1,3 +1,7 @@
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,6 +16,7 @@ public class ClientHandler {
     private DataOutputStream output;
     private String nickName;
     private boolean isAuth;
+    private static final Logger logger = LogManager.getLogger(ClientHandler.class);
 
     public String getNickName() {
         return nickName;
@@ -32,14 +37,16 @@ public class ClientHandler {
                         authOrRegistr();
                         readMessages();
                     } catch (IOException e) {
-                        System.out.println("Connection failed" + "\n");
+                        logger.info("Connection failed");
+                        logger.throwing(Level.DEBUG, e);
                     } finally {
                         closeConnection();
                     }
                 }
             });
         } catch (IOException e) {
-            System.out.println("Socket connection error");
+            logger.error("Socket connection error");
+            logger.throwing(Level.DEBUG, e);
         }
     }
 
@@ -59,7 +66,7 @@ public class ClientHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Client " + nickName + " disconnected" );
+            logger.info("Client " + nickName + " disconnected");
         }
     }
 
@@ -71,7 +78,7 @@ public class ClientHandler {
             MessageDTO answer = new MessageDTO();
             answer.setMessageType(MessageType.ERROR_MESSAGE);
             answer.setBody("Nick or login already busy!");
-            System.out.println("Nick or login already busy!");
+            logger.info("Nick or login already busy!");
             sendMessage(answer);
         }
     }
@@ -105,17 +112,17 @@ public class ClientHandler {
         if (nickName == null){
             answer.setMessageType(MessageType.ERROR_MESSAGE);
             answer.setBody("Wrong login or pass!");
-            System.out.println("Wrong auth");
+            logger.info("Wrong auth");
         } else if (server.isUserBusy(nickName)) {
             answer.setMessageType(MessageType.ERROR_MESSAGE);
             answer.setBody("U're need to change nick!!!");
-            System.out.println("Clone");
+            logger.info("Clone");
         } else {
             answer.setMessageType(MessageType.AUTH_CONFIRM);
             answer.setFrom(nickName);
             answer.setBody("Subscribed");
             server.addOnlineUser(this);
-            System.out.println("Subscribed");
+            logger.info("Subscribed");
             sendMessage(answer);
             isAuth = true;
         }
@@ -126,7 +133,8 @@ public class ClientHandler {
         try {
             output.writeUTF(dto.convertToJson());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Massage sending error");
+            logger.throwing(Level.DEBUG, e);
         }
     }
 
@@ -135,8 +143,8 @@ public class ClientHandler {
             socket.close();
             server.removeUser(this);
         } catch (IOException e) {
-            System.out.println("Socket closing error");
-            e.printStackTrace();
+            logger.error("Socket closing error");
+            logger.throwing(Level.DEBUG, e);
         }
     }
 
@@ -146,7 +154,7 @@ public class ClientHandler {
         public void run() {
             if (nickName == null){
                 closeConnection();
-                System.out.println("The client was disconnected by timeout");
+                logger.info("The client was disconnected by timeout");
             }
         }
     }

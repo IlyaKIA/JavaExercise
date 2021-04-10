@@ -1,0 +1,15 @@
+2021-04-10 16:03:50 [main] ChatServer (ChatServer.java:44) - Server started
+2021-04-10 16:03:50 [main] ChatServer (ChatServer.java:45) - Server started
+2021-04-10 16:04:18 [main] ChatServer (ChatServer.java:48) - Client connected
+2021-04-10 16:04:18 [main] ChatServer (ChatServer.java:44) - Server started
+2021-04-10 16:04:18 [main] ChatServer (ChatServer.java:45) - Server started
+2021-04-10 16:36:06 [main] INFO  BaseAuthService - Authentication started
+2021-04-10 16:36:06 [main] INFO  ChatServer - Server started
+2021-04-10 16:36:25 [main] INFO  ChatServer - Client connected
+2021-04-10 16:36:25 [main] INFO  ChatServer - Server started
+2021-04-10 16:36:27 [pool-2-thread-1] INFO  ClientHandler - Subscribed
+2021-04-10 16:36:38 [main] INFO  ChatServer - Client connected
+2021-04-10 16:36:38 [main] INFO  ChatServer - Server started
+2021-04-10 16:36:40 [pool-2-thread-2] INFO  ClientHandler - Subscribed
+2021-04-10 16:37:16 [pool-2-thread-1] INFO  ClientHandler - Client Kolya disconnected
+2021-04-10 16:37:18 [pool-2-thread-2] INFO  ClientHandler - Client Petya disconnected

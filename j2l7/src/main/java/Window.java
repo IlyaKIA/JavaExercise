@@ -199,19 +199,22 @@ public class Window extends JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //TODO Вывод сообщений с ошибками.
                 while (true) {
                     String msg = conServ.getInMSG();
                     if (msg != null) {
-                        userList.setModel(conServ.getUsersOnline());
-                        userList.setSelectedIndex(0);
-                        break;
+                        if (msg.substring(1, 14).equals("ERROR_MESSAGE")){
+                            appendHistoryText(msg);
+                        } else {
+                            userList.setModel(conServ.getUsersOnline());
+                            userList.setSelectedIndex(0);
+                            break;
+                        }
                     }
                 }
                 while (true) {
                     String msg = conServ.getInMSG();
                     if (msg != null) {
-                        if (msg.equals("*Refresh user list")) {
+                        if (msg.equals("*CLIENTS_LIST_MESSAGE")) {
                             userList.setSelectedIndex(0);
                         } else {
                             appendHistoryText(msg);

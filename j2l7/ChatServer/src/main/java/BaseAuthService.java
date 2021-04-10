@@ -1,11 +1,15 @@
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
-import java.util.List;
 
 public class BaseAuthService implements AuthService {
 
     private Connection connection;
     private Statement statement;
     private PreparedStatement prSt;
+    private static final Logger logger = LogManager.getLogger(BaseAuthService.class);
 
     public BaseAuthService(){
     }
@@ -14,7 +18,7 @@ public class BaseAuthService implements AuthService {
     @Override
     public void start() {
         connectDB();
-        System.out.println("Authentication started");
+        logger.info("Authentication started");
     }
 
     @Override
@@ -26,7 +30,8 @@ public class BaseAuthService implements AuthService {
                     return rs.getString("nick");
             }
         } catch (SQLException throwables) {
-            System.out.println("Read data base error");
+            logger.error("Read data base error");
+            logger.throwing(Level.DEBUG, throwables);
         }
         return null;
     }
@@ -34,14 +39,15 @@ public class BaseAuthService implements AuthService {
     @Override
     public void stop() {
         disconnectDB();
-        System.out.println("Authentication stopped");
+        logger.info("Authentication stopped");
     }
 
     private void addNewUser(String login, String password, String nick){
         try {
             statement.executeUpdate("insert into users (Login, password, nick) values ('" + login +"', '" + password +"', '" + nick + "');");
         } catch (SQLException throwables) {
-            System.out.println("Error. New user is not added to data base");
+            logger.error("New user is not added to data base");
+            logger.throwing(Level.DEBUG, throwables);
         }
     }
 
@@ -52,7 +58,8 @@ public class BaseAuthService implements AuthService {
             statement = connection.createStatement ();
             statement.executeUpdate("create table if not exists users (id integer primary key autoincrement, login text, password text, nick text);");
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Create data base error");
+            logger.error("Create data base error");
+            logger.throwing(Level.DEBUG, e);
         }
     }
 
@@ -61,7 +68,8 @@ public class BaseAuthService implements AuthService {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
         } catch (SQLException throwables) {
-            System.out.println("Disconnect data base error");
+            logger.error("Disconnect data base error");
+            logger.throwing(Level.DEBUG, throwables);
         }
     }
     public void changeNickInDB (String oldNick, String newNick){
@@ -71,7 +79,8 @@ public class BaseAuthService implements AuthService {
             prSt.setString(2, oldNick);
             prSt.executeUpdate();
         } catch (SQLException throwables) {
-            System.out.println("Change nick Error");
+            logger.error("Change nick Error");
+            logger.throwing(Level.DEBUG, throwables);
         }
     }
     public boolean isAccountFree(String newNick, String accountData){
@@ -82,7 +91,8 @@ public class BaseAuthService implements AuthService {
                 if (newNick.equals(s)) return false;
             }
         } catch (SQLException throwables) {
-            System.out.println("Read data base error");
+            logger.error("Read data base error");
+            logger.throwing(Level.DEBUG, throwables);
         }
         return true;
     }
@@ -95,7 +105,8 @@ public class BaseAuthService implements AuthService {
             prSt.setString(3, nick);
             prSt.executeUpdate();
         } catch (SQLException throwables) {
-            System.out.println("Registration new user error");
+            logger.error("Registration new user error");
+            logger.throwing(Level.DEBUG, throwables);
         }
     }
 }

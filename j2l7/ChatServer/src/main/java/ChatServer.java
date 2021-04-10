@@ -1,6 +1,8 @@
-//package ChatServer;
 
-import javax.swing.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,9 +22,11 @@ public class ChatServer {
     private static DataOutputStream output;
     private static Socket socket;
     private static Scanner scanner;
+    private static final Logger logger = LogManager.getLogger(ChatServer.class);
     private List<ClientHandler> onlineClients;
     private AuthService authService;
     private ExecutorService execService;
+
 
     public AuthService getAuthService() {
         return authService;
@@ -36,13 +40,14 @@ public class ChatServer {
             authService.start();
             execService = Executors.newCachedThreadPool();
             while (true){
-                System.out.println("Server started");
+                logger.info("Server started");
                 socket = serv.accept();
-                System.out.println("Client connected.");
+                logger.info("Client connected");
                 new ClientHandler(socket, this);
             }
         } catch (IOException e) {
-            System.out.println("Error. Port is closed.");
+            logger.error("Port is closed");
+            logger.throwing(Level.DEBUG, e);
         } finally {
             if (authService != null) {
                 authService.stop();
@@ -55,10 +60,11 @@ public class ChatServer {
     private static void closeConnection() {
         try {
             socket.close();
-            System.out.println("Connection is closed.");
+            logger.info("Connection is closed.");
             scanner.close();
         } catch (IOException e) {
-            System.out.println("Error of connection ending.");
+            logger.error("Connection ending");
+            logger.throwing(Level.DEBUG, e);
         }
     }
 
