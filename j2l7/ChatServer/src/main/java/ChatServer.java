@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ChatServer {
     private static final int PORT = 8085;
@@ -20,6 +22,7 @@ public class ChatServer {
     private static Scanner scanner;
     private List<ClientHandler> onlineClients;
     private AuthService authService;
+    private ExecutorService execService;
 
     public AuthService getAuthService() {
         return authService;
@@ -31,6 +34,7 @@ public class ChatServer {
             onlineClients = new LinkedList<>();
             authService = new BaseAuthService();
             authService.start();
+            execService = Executors.newCachedThreadPool();
             while (true){
                 System.out.println("Server started");
                 socket = serv.accept();
@@ -44,6 +48,7 @@ public class ChatServer {
                 authService.stop();
             }
             closeConnection();
+            execService.shutdown();
         }
     }
 
@@ -103,5 +108,9 @@ public class ChatServer {
 
     public void changeNick(MessageDTO dto) {
                 authService.changeNickInDB(dto.getFrom(), dto.getBody());
+    }
+
+    public ExecutorService getExecService() {
+        return execService;
     }
 }

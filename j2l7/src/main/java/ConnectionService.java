@@ -54,16 +54,17 @@ public class ConnectionService {
                 case AUTH_CONFIRM -> {
                     inMSG = "New user added\n";
                     nick = dto.getFrom();
+                    //Main.getWindow().insertMSG();
                     Main.getWindow().setTitle(nick);
                     Main.getWindow().getMenuChangeNick().setEnabled(true);
                     Main.getWindow().fillHistoryText();
+                    Main.getWindow().getMenuRegistration().setEnabled(false);
                 }
                 case CHANGE_NICK -> {
                     Main.getWindow().setTitle(dto.getFrom());
                     nick = dto.getFrom();
                 }
-//
-//                case ERROR_MESSAGE -> showError(dto);
+                case ERROR_MESSAGE -> inMSG = errMessage(dto);
             }
             return inMSG;
 
@@ -75,6 +76,11 @@ public class ConnectionService {
     private String showMessage(MessageDTO dto) {
         String msg = String.format("[%s] [%s] -> %s\n", dto.getMessageType(), dto.getFrom(), dto.getBody());
         Main.getWindow().saveHistory(msg);
+        return msg;
+    }
+
+    private String errMessage(MessageDTO dto) {
+        String msg = String.format("[%s] -> %s\n", dto.getMessageType(), dto.getFrom(), dto.getBody());
         return msg;
     }
 
@@ -119,12 +125,14 @@ public class ConnectionService {
     }
 
     public void sendRegistration(String login, String password, String nick) throws IOException {
+        //Main.getWindow().connection();
         MessageDTO dto = new MessageDTO();
         dto.setMessageType(MessageType.REGISTRATION);
         dto.setLogin(login);
         dto.setPassword(password);
         dto.setBody(nick);
         output.writeUTF(dto.convertToJson());
+        Main.getWindow().insertMSG();
     }
 
 
