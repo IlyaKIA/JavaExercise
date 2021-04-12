@@ -2,6 +2,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientHandler {
     private ChatServer server;
@@ -9,6 +11,7 @@ public class ClientHandler {
     private DataInputStream input;
     private DataOutputStream output;
     private String nickName;
+    private boolean isAuthTrue;
 
     public String getNickName() {
         return nickName;
@@ -22,6 +25,8 @@ public class ClientHandler {
             this.output = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
                 try {
+                    Timer timer = new Timer();
+                    timer.schedule(new timerCloseConnection(), 10_000);
                     authentication();
                     readMessages();
                 } catch (IOException e) {
@@ -31,6 +36,7 @@ public class ClientHandler {
                     closeConnection();
                 }
             }).start();
+
         } catch (IOException e) {
             System.out.println("Socket connection error");
         }
@@ -59,7 +65,7 @@ public class ClientHandler {
         while (true) {
             String auth = input.readUTF();
             MessageDTO dto = MessageDTO.convertFromJson(auth);
-            boolean isAuthTrue = server.getAuthService().isAuthCorrect(dto.getLogin(), dto.getPassword());
+            isAuthTrue = server.getAuthService().isAuthCorrect(dto.getLogin(), dto.getPassword());
             nickName = dto.getBody();
             MessageDTO answer = new MessageDTO();
             if (isAuthTrue == false){
@@ -70,6 +76,7 @@ public class ClientHandler {
                 answer.setMessageType(MessageType.ERROR_MESSAGE);
                 answer.setBody("U're need to change nick!!!");
                 System.out.println("Clone");
+                isAuthTrue = false;
             } else {
                 answer.setMessageType(MessageType.AUTH_CONFIRM);
                 answer.setFrom(nickName);
@@ -92,13 +99,23 @@ public class ClientHandler {
     }
 
     private void closeConnection() {
-        //TODO
         try {
             socket.close();
             server.removeUser(this);
         } catch (IOException e) {
             System.out.println("Socket closing error");
             e.printStackTrace();
+        }
+    }
+
+    private class timerCloseConnection extends TimerTask
+    {
+        @Override
+        public void run() {
+            if (isAuthTrue == false){
+                closeConnection();
+                System.out.println("The client was disconnected by timeout");
+            }
         }
     }
 }
