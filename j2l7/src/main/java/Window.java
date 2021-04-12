@@ -3,15 +3,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 public class Window extends JFrame {
     private ConnectionService conServ;
     private JTextArea historyText;
     private Settings settings;
+    private ChangeNick changeNick;
     public static JList<String> userList;
+    private Registration registration;
+    private JMenuItem menuChangeNick;
+
 
     public Window() {
         setTitle("MyChat");
@@ -28,8 +29,7 @@ public class Window extends JFrame {
         JScrollPane scrollUsers = new JScrollPane(userList);
         scrollUsers.setPreferredSize(new Dimension(120, 0));
 
-        JButton insertTextBtn = new JButton();
-        insertTextBtn.setText(">");
+        JButton insertTextBtn = new JButton(">");
         //Установка расположения поля ввода текста и кнопки в контейнере
         Container insertTextCont = new Container();
         insertTextCont.setLayout( new BorderLayout());
@@ -44,16 +44,21 @@ public class Window extends JFrame {
         JMenuItem menuConnect = new JMenuItem("Connect");
         JMenuItem menuGetIn = new JMenuItem("Get in");
         JMenuItem menuDisconnect = new JMenuItem("Disconnect");
+        JMenuItem menuRegistration = new JMenuItem("Registration");
+        menuChangeNick = new JMenuItem("Change nick");
+        menuChangeNick.setEnabled(false);
         JMenuItem menuAbout = new JMenuItem("About");
         JMenuItem menuSettings = new JMenuItem("Settings");
         JMenuItem menuExit = new JMenuItem("Exit");
         menuFile.add(menuSettings);
         menuFile.add(menuAbout);
+        menuFile.add(menuChangeNick);
         menuFile.add(menuExit);
         menuBar.add(menuFile);
         menuConnection.add(menuConnect);
         menuConnection.add(menuGetIn);
         menuConnection.add(menuDisconnect);
+        menuConnection.add(menuRegistration);
         menuBar.add(menuConnection);
         setJMenuBar(menuBar);
 
@@ -68,11 +73,14 @@ public class Window extends JFrame {
         settings = new Settings();
 
 
+//        profile = new Profile(settings.getLoginTextField(), settings.getPasswordField(), settings.getNickTextField());
+//        profile.setVisible(true);
+
         //Соединение
         menuConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(),settings.getNickTextField(), settings.getLoginTextField(), settings.getPasswordField());
+                conServ = new ConnectionService(settings.getAddressTextField(), settings.getPortTextField(), settings.getLoginTextField(), settings.getPasswordField());
                 try {
                     conServ.connect();
                     historyText.append("Connection success\n");
@@ -144,8 +152,8 @@ public class Window extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 settings.pack();
+                settings.getAlwaysOnTopCheckBox().setSelected(Main.getWindow().isAlwaysOnTop());
                 settings.setVisible(true);
-                setAlwaysOnTop(Main.checkAlwaysOnTop);
             }
         });
         //Отслеживанеи кнопки выхода
@@ -155,9 +163,19 @@ public class Window extends JFrame {
                 System.exit(0);
             }
         });
+        //Вклчение меню смены ника
+        menuChangeNick.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeNick = new ChangeNick(conServ.getNick());
+                changeNick.setVisible(true);
+            }
+        });
 
         setVisible(true);
     }
+
+
     void insertMSG() {
         //Запуск потока чтения
         new Thread(new Runnable() {
@@ -166,7 +184,6 @@ public class Window extends JFrame {
                 while (true) {
                     String msg = conServ.getInMSG();
                     if (msg != null) {
-                        setTitle(settings.getNickTextField());
                         userList.setModel(conServ.getUsersOnline());
                         userList.setSelectedIndex(0);
                         break;
@@ -174,18 +191,24 @@ public class Window extends JFrame {
                 }
                 while (true) {
                     String msg = conServ.getInMSG();
-                    if (msg.equals("*Refresh user list")){
-                        userList.setSelectedIndex(0);
+                    if (msg != null) {
+                        if (msg.equals("*Refresh user list")) {
+                            userList.setSelectedIndex(0);
+                        } else {
+                            historyText.append(msg);
+                        }
                     } else {
-                        historyText.append(msg);
+                        historyText.append("Server is disconnected");
+                        break;
                     }
+
                 }
             }
         }).start();
     }
 
-    //Метод отправки текста
 
+    //Метод отправки текста
     private void exportTextMetod(JTextArea historyText, JTextField textInput) {
         String errText = "Введите текст";
 
@@ -211,4 +234,11 @@ public class Window extends JFrame {
         }
     }
 
+    public JMenuItem getMenuChangeNick() {
+        return menuChangeNick;
+    }
+
+    public ConnectionService getConServ() {
+        return conServ;
+    }
 }

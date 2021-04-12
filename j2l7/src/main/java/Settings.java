@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.Window;
 import java.awt.event.*;
 
 public class Settings extends JDialog {
@@ -28,8 +27,6 @@ public class Settings extends JDialog {
         setResizable(false);
         setLocationRelativeTo(null);
         setAlwaysOnTop(true);
-
-        alwaysOnTopCheckBox.setSelected(Main.checkAlwaysOnTop);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -61,7 +58,7 @@ public class Settings extends JDialog {
 
     private void onOK() {
         // add your code here
-        Main.checkAlwaysOnTop = alwaysOnTopCheckBox.isSelected();
+        Main.getWindow().setAlwaysOnTop(alwaysOnTopCheckBox.isSelected());
         dispose();
     }
 
@@ -86,6 +83,7 @@ public class Settings extends JDialog {
         return passwordField.getText();
     }
 
-
-
+    public JCheckBox getAlwaysOnTopCheckBox() {
+        return alwaysOnTopCheckBox;
+    }
 }

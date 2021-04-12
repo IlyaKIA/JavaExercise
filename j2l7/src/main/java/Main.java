@@ -1,8 +1,12 @@
 public class Main {
-    public static boolean checkAlwaysOnTop;
-    private static int PORT;
-    private static String ADDRESS;
+    private static Window window;
+
     public static void main (String[] args){
-    Window window = new Window();
+    window = new Window();
     }
+
+    public static Window getWindow() {
+        return window;
+    }
+
 }

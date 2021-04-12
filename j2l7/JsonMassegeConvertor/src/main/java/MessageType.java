@@ -14,5 +14,6 @@ public enum MessageType {
     CLIENTS_LIST_MESSAGE,
     SEND_AUTH_MESSAGE,
     AUTH_CONFIRM,
-    ERROR_MESSAGE
+    ERROR_MESSAGE,
+    CHANGE_NICK
 }
