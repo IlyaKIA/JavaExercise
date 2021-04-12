@@ -49,7 +49,7 @@ public class ConnectionService {
                     for (String u : inputUserList){
                         usersOnline.addElement(u);
                     }
-                    inMSG = "*Refresh user list";
+                    inMSG = "*" + dto.getMessageType();
                 }
                 case AUTH_CONFIRM -> {
                     inMSG = "New user added\n";
@@ -80,7 +80,7 @@ public class ConnectionService {
     }
 
     private String errMessage(MessageDTO dto) {
-        String msg = String.format("[%s] -> %s\n", dto.getMessageType(), dto.getFrom(), dto.getBody());
+        String msg = String.format("[%s] -> %s\n", dto.getMessageType(), dto.getBody());
         return msg;
     }
 

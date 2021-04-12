@@ -12,3 +12,5 @@ New user added
 [PUBLIC_MESSAGE] [Vova] -> 1
 [PUBLIC_MESSAGE] [Petya] -> Привет
 [PUBLIC_MESSAGE] [Vova] -> hi
+[PUBLIC_MESSAGE] [Petya] -> Hello
+[PUBLIC_MESSAGE] [Vova] -> Vova change nick to Kolya
