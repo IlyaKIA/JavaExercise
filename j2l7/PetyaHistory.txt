@@ -1,0 +1,11 @@
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Petya] -> Hello!
+[PUBLIC_MESSAGE] [Vova] -> hi!
+[PUBLIC_MESSAGE] [Vova] -> Hello
+[PUBLIC_MESSAGE] [Petya] -> как дела?
+[PRIVATE_MESSAGE] [Vova] -> Все норм
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Petya] -> fds
+[PUBLIC_MESSAGE] [Vova] -> asdf

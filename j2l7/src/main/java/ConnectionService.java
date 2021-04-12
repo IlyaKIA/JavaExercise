@@ -56,10 +56,11 @@ public class ConnectionService {
                     nick = dto.getFrom();
                     Main.getWindow().setTitle(nick);
                     Main.getWindow().getMenuChangeNick().setEnabled(true);
+                    Main.getWindow().fillHistoryText();
                 }
                 case CHANGE_NICK -> {
                     Main.getWindow().setTitle(dto.getFrom());
-                    nick = dto.getBody();
+                    nick = dto.getFrom();
                 }
 //
 //                case ERROR_MESSAGE -> showError(dto);
@@ -73,6 +74,7 @@ public class ConnectionService {
     }
     private String showMessage(MessageDTO dto) {
         String msg = String.format("[%s] [%s] -> %s\n", dto.getMessageType(), dto.getFrom(), dto.getBody());
+        Main.getWindow().saveHistory(msg);
         return msg;
     }
 
@@ -115,6 +117,16 @@ public class ConnectionService {
         dto.setBody(newNick);
         output.writeUTF(dto.convertToJson());
     }
+
+    public void sendRegistration(String login, String password, String nick) throws IOException {
+        MessageDTO dto = new MessageDTO();
+        dto.setMessageType(MessageType.REGISTRATION);
+        dto.setLogin(login);
+        dto.setPassword(password);
+        dto.setBody(nick);
+        output.writeUTF(dto.convertToJson());
+    }
+
 
     public String getNick() {
         return nick;

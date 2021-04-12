@@ -53,32 +53,41 @@ public class ClientHandler {
 //                    case SEND_AUTH_MESSAGE -> authentication(dto);
                     case  PUBLIC_MESSAGE -> server.broadcastMessage(dto);
                     case PRIVATE_MESSAGE -> server.privetMessage(dto);
-                    case CHANGE_NICK -> {
-                        if (!server.isUserBusy(dto.getBody())) {
-                            server.changeNick(dto);
-                            nickName = dto.getBody();
-                            server.broadcastOnlineClients();
-                            MessageDTO answer = new MessageDTO();
-                            answer.setMessageType(MessageType.CHANGE_NICK);
-                            answer.setFrom(nickName);
-                            answer.setBody(dto.getFrom() + " change nick to " + dto.getBody());
-                            server.privetMessage(answer);
-                            answer.setFrom(dto.getFrom());
-                            answer.setMessageType(MessageType.PUBLIC_MESSAGE);
-                            server.broadcastMessage(answer);
-                        } else {
-                            MessageDTO answer = new MessageDTO();
-                            answer.setMessageType(MessageType.PRIVATE_MESSAGE);
-                            answer.setFrom(dto.getFrom());
-                            answer.setTo(dto.getFrom());
-                            answer.setBody("Error nick is busy");
-                            server.privetMessage(answer);
-                        }
-                    }
+                    case CHANGE_NICK -> nickChanging(dto);
+                    case REGISTRATION -> addNewUser(dto);
                 }
             }
         } catch (IOException e) {
             System.out.println("Client " + nickName + " disconnected" );
+        }
+    }
+
+    private void addNewUser(MessageDTO dto) {
+        if (server.getAuthService().isAccountFree(dto.getLogin(), "nick") && server.getAuthService().isAccountFree(dto.getBody(), "login")) {
+            //TODO
+        }
+    }
+
+    private void nickChanging(MessageDTO dto) {
+        if (server.getAuthService().isAccountFree(dto.getBody(), "nick")) {
+            server.changeNick(dto);
+            nickName = dto.getBody();
+            server.broadcastOnlineClients();
+            MessageDTO answer = new MessageDTO();
+            answer.setMessageType(MessageType.CHANGE_NICK);
+            answer.setFrom(nickName);
+            answer.setBody(dto.getFrom() + " change nick to " + dto.getBody());
+            server.privetMessage(answer);
+            answer.setFrom(dto.getFrom());
+            answer.setMessageType(MessageType.PUBLIC_MESSAGE);
+            server.broadcastMessage(answer);
+        } else {
+            MessageDTO answer = new MessageDTO();
+            answer.setMessageType(MessageType.PRIVATE_MESSAGE);
+            answer.setFrom(dto.getFrom());
+            answer.setTo(dto.getFrom());
+            answer.setBody("Error nick is busy");
+            server.privetMessage(answer);
         }
     }
 

@@ -1,0 +1,123 @@
+Connection success
+Authentication success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Vova] -> d
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Vova] -> Hello
+Disconnected
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Petya] -> Hello!
+[PUBLIC_MESSAGE] [Vova] -> hi!
+New user added
+Disconnected
+New user added
+Disconnected
+New user added
+[PRIVATE_MESSAGE] [Vova] -> Как дела?
+[PUBLIC_MESSAGE] [Ilya] -> Не понял...
+[PUBLIC_MESSAGE] [Ilya] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> ыфваыв
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> фываывфа
+[PRIVATE_MESSAGE] [Ilya] -> фывавыа
+[PRIVATE_MESSAGE] [Vova] -> фывафыва
+[PRIVATE_MESSAGE] [Vova] -> фывафывафыв
+Disconnected
+Disconnected
+Connection success
+Authentication success
+Connection success
+Authentication success
+Connection success
+Authentication success
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Vova] -> d
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Vova] -> Hello
+Disconnected
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Petya] -> Hello!
+[PUBLIC_MESSAGE] [Vova] -> hi!
+New user added
+Disconnected
+New user added
+Disconnected
+New user added
+[PRIVATE_MESSAGE] [Vova] -> Как дела?
+[PUBLIC_MESSAGE] [Ilya] -> Не понял...
+[PUBLIC_MESSAGE] [Ilya] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> ыфваыв
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> фываывфа
+[PRIVATE_MESSAGE] [Ilya] -> фывавыа
+[PRIVATE_MESSAGE] [Vova] -> фывафыва
+[PRIVATE_MESSAGE] [Vova] -> фывафывафыв
+Disconnected
+Disconnected
+Connection success
+Authentication success
+Connection success
+Authentication success
+Connection success
+Authentication success
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Vova] -> d
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Vova] -> Hello
+Disconnected
+Connection success
+Authentication success
+New user added
+[PUBLIC_MESSAGE] [Petya] -> Hello!
+[PUBLIC_MESSAGE] [Vova] -> hi!
+New user added
+Disconnected
+New user added
+Disconnected
+New user added
+[PRIVATE_MESSAGE] [Vova] -> Как дела?
+[PUBLIC_MESSAGE] [Ilya] -> Не понял...
+[PUBLIC_MESSAGE] [Ilya] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> ыфваыв
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Ilya] -> фываывфа
+[PRIVATE_MESSAGE] [Ilya] -> фывавыа
+[PRIVATE_MESSAGE] [Vova] -> фывафыва
+[PRIVATE_MESSAGE] [Vova] -> фывафывафыв
+Disconnected
+New user added
+[PUBLIC_MESSAGE] [Vova] -> нуке
+[PUBLIC_MESSAGE] [Vova] -> вапрвпар
+[PUBLIC_MESSAGE] [Vova] -> аывпаырвпаыр
+[PUBLIC_MESSAGE] [Vova] -> апрапр
+[PUBLIC_MESSAGE] [Vova] -> апрпарвапр
+Disconnected
+[PUBLIC_MESSAGE] [Vova] -> Hello
+[PUBLIC_MESSAGE] [Petya] -> как дела?
+[PRIVATE_MESSAGE] [Vova] -> Все норм
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Vova] -> Hello
+[PUBLIC_MESSAGE] [Petya] -> как дела?
+[PRIVATE_MESSAGE] [Vova] -> Все норм
+[PRIVATE_MESSAGE] [Vova] -> фыва
+[PUBLIC_MESSAGE] [Vova] -> фывафыва
+[PUBLIC_MESSAGE] [Vova] -> 2222
+[PRIVATE_MESSAGE] [Vova] -> fghgfh
+[PRIVATE_MESSAGE] [Vova] -> hngf
+[PUBLIC_MESSAGE] [Petya] -> fds
+[PUBLIC_MESSAGE] [Vova] -> asdf
