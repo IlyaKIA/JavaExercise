@@ -27,7 +27,6 @@ public class MainClass {
     public static boolean isWinner() {
         return winner;
     }
-
     public static void setWinner(boolean isWinner) {
         MainClass.winner = isWinner;
     }
