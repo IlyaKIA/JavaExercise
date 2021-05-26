@@ -4,5 +4,4 @@ public class Main {
         book.add("Кусков", "8-925-255-55-10");
         System.out.println(book.get("Носков"));
     }
-
 }
