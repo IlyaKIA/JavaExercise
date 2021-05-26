@@ -1,2 +1,2 @@
 # GeekRep
-Geek HomeWork
+Java exercise, home work in Geek Brains.
